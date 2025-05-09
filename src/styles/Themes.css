@@ -1,0 +1,37 @@
+/* src/styles/themes.css */
+:root {
+  --brand: #007bff;
+  --bg: #ffffff;
+  --text: #212529;
+  --cta: #0056b3;
+  --accent: #dee2e6;
+  --muted: #6c757d;
+  --hover: #f8f9fa;
+}
+
+[data-theme='dark'],
+[data-theme='dark'] body {
+  --bg: #1f1f1f;
+  --text: #f8f9fa;
+  --cta: #66b2ff;
+  --accent: #444;
+  --muted: #999;
+  --hover: #2a2a2a;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
+
+.favorite {
+  color: gold;
+}
+
+.heart {
+  color: pink;
+}
+
+.close {
+  color: whitesmoke;
+}
