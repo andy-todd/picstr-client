@@ -1,0 +1,39 @@
+/* Override yet-another-react-lightbox styles */
+.yarl__root {
+  --yarl__color_backdrop: rgba(0, 0, 0, 0.9);
+  --yarl__slide_title_color: #fff;
+  --yarl__color_button: rgba(255, 255, 255, 0.8);
+  --yarl__color_button_active: #fff;
+}
+
+[data-theme='dark'] .yarl__root {
+  --yarl__color_backdrop: rgba(0, 0, 0, 0.95);
+}
+
+.lightbox-action-btn {
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-action-btn.liked {
+  color: pink;
+}
+
+.lightbox-action-btn.favorited {
+  color: gold;
+}
+
+.lightbox-controls {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+}

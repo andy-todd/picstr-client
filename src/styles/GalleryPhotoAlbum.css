@@ -1,0 +1,59 @@
+/* src/styles/GalleryPhotoAlbum.css */
+
+.gallery-photo-album {
+  width: 100%;
+  display: block;
+  padding: 12px;
+  background-color: var(--bg);
+}
+
+.photo-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -6px;
+  justify-content: flex-start;
+}
+
+.photo-cell {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding: 6px;
+  margin: 0 !important;
+}
+
+.photo-container {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.photo-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* For the dark mode grid look */
+.gallery-container {
+  background-color: var(--bg);
+  min-height: calc(100vh - 120px);
+}
+
+/* Ensure proper sizing for different screen sizes */
+@media (max-width: 768px) {
+  .gallery-photo-album {
+    padding: 6px;
+  }
+
+  .photo-row {
+    margin: 0 -3px;
+  }
+
+  .photo-cell {
+    padding: 3px;
+  }
+}

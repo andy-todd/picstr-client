@@ -1,66 +1,162 @@
 // src/components/PhotoThumbnail.jsx
-import React from 'react';
-import { useModalContext } from '../contexts/ModalContext';
-import CustomLightbox from './CustomLightbox';
+import React, { useState } from 'react';
+import { Form } from 'react-bootstrap';
+import { BsStar, BsStarFill, BsHeart, BsHeartFill, BsPencil, BsCollection, BsTag } from 'react-icons/bs';
+import HeartBurstOverlay from './HeartBurstOverlay';
 import { getThumbnailUrl } from '../services/photoService';
+import '../styles/PhotoThumbnail.css';
 
 const PhotoThumbnail = ({
   photo,
-  liked,
-  favorited,
+  liked = false,
+  favorited = false,
+  selected = false,
+  isOwner = true,
   onLike,
   onFavorite,
+  onSelect,
   onClick,
-  width = '100%',
-  height = 'auto',
+  onEdit,
+  onAddToCollection,
+  onAddTags,
+  width,
+  height,
+  imageProps = {}
 }) => {
-  const { openModal } = useModalContext();
+  const [showControls, setShowControls] = useState(false);
+  const [showHeartAnimation, setShowHeartAnimation] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
-  const handleClick = (e) => {
-    console.log('📸 Thumbnail clicked!', photo);
+  // Calculate icon size based on thumbnail size (height)
+  const getIconSize = () => {
+    const size = parseInt(height, 10);
+    if (isNaN(size)) return 16; // default
 
-    // Ensure we have a valid photo object
-    if (!photo || !photo.userId || !photo.filename) {
-      console.error('❌ Invalid photo object:', photo);
-      return;
-    }
-
-    if (onClick) {
-      console.log('🔀 Using provided onClick handler');
-      onClick();
-    } else {
-      console.log('🔍 Opening modal with CustomLightbox');
-      openModal(CustomLightbox, {
-        photo,
-        liked,
-        favorited,
-        onLike,
-        onFavorite
-      });
-    }
+    if (size <= 150) return 14;
+    if (size <= 250) return 16;
+    return 18;
   };
 
-  // Ensure we have a valid photo before trying to get URL
-  if (!photo || !photo.userId || !photo.thumbnailFilename) {
-    console.error('❌ Invalid photo in PhotoThumbnail:', photo);
-    return <div className="photo-thumbnail error">Invalid photo data</div>;
-  }
+  const iconSize = getIconSize();
 
-  const thumbUrl = getThumbnailUrl(photo);
-  console.log('🖼️ Rendering thumbnail with URL:', thumbUrl);
+  // Direct click handler without event object
+  const handleClick = () => {
+    onClick?.();
+  };
+
+  // Handle like with animation
+  const handleLike = (e) => {
+    e.stopPropagation();
+    if (!liked) {
+      setShowHeartAnimation(true);
+      setTimeout(() => setShowHeartAnimation(false), 1000);
+    }
+    onLike?.();
+  };
+
+  // Handle favorite
+  const handleFavorite = (e) => {
+    e.stopPropagation();
+    onFavorite?.();
+  };
+
+  // Handle selection
+  const handleSelect = (e) => {
+    e.stopPropagation();
+    onSelect?.();
+  };
+
+  // Handle edit
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    onEdit?.();
+  };
+
+  // Handle add to collection
+  const handleAddToCollection = (e) => {
+    e.stopPropagation();
+    onAddToCollection?.();
+  };
+
+  // Handle add tags
+  const handleAddTags = (e) => {
+    e.stopPropagation();
+    onAddTags?.();
+  };
 
   return (
     <div
-      className="photo-thumbnail"
+      className={`photo-thumbnail ${selected ? 'selected' : ''} ${showControls ? 'hover-active' : ''}`}
+      style={{ width, height }}
+      onMouseEnter={() => setShowControls(true)}
+      onMouseLeave={() => setShowControls(false)}
       onClick={handleClick}
-      style={{ cursor: 'pointer' }}
+      data-testid="photo-thumbnail"
     >
       <img
-        src={thumbUrl}
+        src={getThumbnailUrl(photo)}
         alt={photo.title || 'Photo'}
-        style={{ width, height }}
+        draggable="false"
         loading="lazy"
+        decoding="async"
+        onLoad={() => setImageLoaded(true)}
+        className={imageLoaded ? 'loaded' : ''}
+        onContextMenu={(e) => e.preventDefault()}
+        {...imageProps}
       />
+
+      {/* Add a placeholder while the image loads */}
+      {!imageLoaded && <div className="image-placeholder"></div>}
+
+      {/* Selection checkbox */}
+      <div className="photo-checkbox">
+        <Form.Check
+          type="checkbox"
+          checked={selected}
+          onChange={handleSelect}
+          onClick={(e) => e.stopPropagation()}
+        />
+      </div>
+
+      {/* Favorite/Like control in top right */}
+      {isOwner ? (
+        <div className="favorite-control">
+          <button
+            onClick={handleFavorite}
+            className={`icon-btn ${favorited ? 'favorited' : ''}`}
+          >
+            {favorited ? <BsStarFill size={iconSize} /> : <BsStar size={iconSize} />}
+          </button>
+        </div>
+      ) : (
+        <div className="like-control">
+          <button
+            onClick={handleLike}
+            className={`icon-btn ${liked ? 'liked' : ''}`}
+          >
+            {liked ? <BsHeartFill size={iconSize} /> : <BsHeart size={iconSize} />}
+          </button>
+        </div>
+      )}
+
+      {/* Bottom controls bar */}
+      <div className="bottom-controls">
+        <button onClick={handleEdit} className="icon-btn">
+          <BsPencil size={iconSize} />
+        </button>
+        <button onClick={handleAddToCollection} className="icon-btn">
+          <BsCollection size={iconSize} />
+        </button>
+        <button onClick={handleAddTags} className="icon-btn">
+          <BsTag size={iconSize} />
+        </button>
+      </div>
+
+      {/* Heart animation overlay */}
+      {showHeartAnimation && <HeartBurstOverlay />}
+
+      {/* Clickable overlay to ensure clicks are captured */}
+      <div className="click-overlay"></div>
     </div>
   );
 };

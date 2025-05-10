@@ -1,0 +1,100 @@
+/* src/styles/InteractionBar.css */
+
+.interaction-bar {
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--accent);
+  padding: 8px 16px;
+  margin-bottom: 0;
+}
+
+.interaction-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.left-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.center-controls {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.right-controls {
+  display: flex;
+  align-items: center;
+}
+
+.size-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.size-slider {
+  width: 120px;
+}
+
+.size-label {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.size-value {
+  min-width: 50px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  background-color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.control-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: transparent;
+  border: 1px solid var(--accent);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.control-btn:hover {
+  background-color: var(--hover);
+}
+
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .interaction-bar {
+    padding: 8px;
+  }
+
+  .left-controls {
+    gap: 4px;
+  }
+
+  .control-btn {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+
+  .size-slider {
+    width: 80px;
+  }
+
+  .size-label, .size-value {
+    font-size: 0.8rem;
+  }
+}

@@ -1,115 +1,92 @@
-// src/components/CustomLightbox.jsx
-import React, { useState, useEffect } from 'react';
-import Lightbox, { IconButton, useLightboxState } from 'yet-another-react-lightbox';
-import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import React from 'react';
+import Lightbox from 'yet-another-react-lightbox';
 import 'yet-another-react-lightbox/styles.css';
-import { FaHeart, FaRegHeart, FaStar, FaRegStar } from 'react-icons/fa';
-import HeartBurstOverlay from './HeartBurstOverlay';
-import { getFullImageUrl } from '../services/photoService';
-
-const LikeButton = ({ liked, onLike }) => {
-  const { currentSlide } = useLightboxState();
-  return (
-    <IconButton
-      label="Like"
-      icon={liked ? FaHeart : FaRegHeart}
-      onClick={onLike}
-      disabled={!currentSlide}
-    />
-  );
-};
-
-const FavoriteButton = ({ favorited, onFavorite }) => {
-  const { currentSlide } = useLightboxState();
-  return (
-    <IconButton
-      label="Favorite"
-      icon={favorited ? FaStar : FaRegStar}
-      onClick={onFavorite}
-      disabled={!currentSlide}
-    />
-  );
-};
+import { BsHeart, BsHeartFill, BsStar, BsStarFill } from 'react-icons/bs';
+import { updatePhoto } from '../services/photoService';
+import '../styles/CustomLightbox.css';
 
 const CustomLightbox = ({
-  onClose,
-  photo,
-  liked,
-  favorited,
-  onLike,
-  onFavorite
+  open,
+  close,
+  slides = [],
+  index = 0,
+  currentUserId
 }) => {
-  const [triggerHeart, setTriggerHeart] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  // Handle like/favorite actions in lightbox
+  const handleActionClick = async (photo, action) => {
+    if (!photo || !photo._id) return;
 
-  useEffect(() => {
-    console.log('🌟 CustomLightbox mounted with photo:', photo);
+    try {
+      const newValue = action === 'like'
+        ? !photo.likes?.includes(currentUserId)
+        : !photo.isFavorite;
 
-    // Short delay to ensure component is fully mounted
-    const timer = setTimeout(() => {
-      console.log('🌟 Setting lightbox to open state');
-      setIsOpen(true);
-    }, 100);
+      const updateData = action === 'like'
+        ? { liked: newValue }
+        : { isFavorite: newValue };
 
-    return () => clearTimeout(timer);
-  }, [photo]);
+      await updatePhoto(photo._id, updateData);
 
-  if (!photo) {
-    console.error('❌ CustomLightbox rendered without photo data');
+      // In a real implementation, you might want to update the state
+      // to reflect the changes in the UI immediately
+    } catch (error) {
+      console.error(`Failed to ${action} photo:`, error);
+    }
+  };
+
+  // Custom slide header to add controls inside lightbox
+  const renderSlideHeader = ({ slide }) => {
+    const photo = slide?.photo;
+    if (!photo) return null;
+
+    const isOwnPhoto = photo.userId === currentUserId;
+    const isLiked = photo.likes?.includes(currentUserId) || false;
+    const isFavorited = photo.isFavorite || false;
+
+    return (
+      <div className="lightbox-controls">
+        {/* Like button - only for photos user doesn't own */}
+        {!isOwnPhoto && (
+          <button
+            onClick={() => handleActionClick(photo, 'like')}
+            className={`lightbox-action-btn ${isLiked ? 'liked' : ''}`}
+          >
+            {isLiked ? <BsHeartFill size={20} /> : <BsHeart size={20} />}
+          </button>
+        )}
+
+        {/* Favorite button - only for user's own photos */}
+        {isOwnPhoto && (
+          <button
+            onClick={() => handleActionClick(photo, 'favorite')}
+            className={`lightbox-action-btn ${isFavorited ? 'favorited' : ''}`}
+          >
+            {isFavorited ? <BsStarFill size={20} /> : <BsStar size={20} />}
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  // Safety check for empty slides
+  if (!slides || !Array.isArray(slides) || slides.length === 0) {
     return null;
   }
 
-  console.log('🖼️ Creating slide with photo:', photo);
-
-  const imageUrl = getFullImageUrl(photo);
-  console.log('🖼️ Full image URL:', imageUrl);
-
-  const slides = [
-    {
-      src: imageUrl,
-      alt: photo.title || '',
-    }
-  ];
-
-  const handleLike = () => {
-    console.log('❤️ Like button clicked');
-    onLike?.();
-    setTriggerHeart(Date.now());
-  };
-
-  const handleClose = () => {
-    console.log('🚪 Lightbox closing');
-    setIsOpen(false);
-
-    // Short delay to allow animation to complete
-    setTimeout(() => {
-      onClose?.();
-    }, 300);
-  };
-
   return (
-    <>
-      <HeartBurstOverlay trigger={triggerHeart} />
-      <Lightbox
-        open={isOpen}
-        close={handleClose}
-        slides={slides}
-        plugins={[Zoom]}
-        toolbar={{
-          buttons: [
-            <LikeButton key="like" liked={liked} onLike={handleLike} />,
-            <FavoriteButton key="fav" favorited={favorited} onFavorite={onFavorite} />,
-            'zoom-in',
-            'zoom-out',
-            'close',
-          ],
-        }}
-        render={{
-          buttonPrev: () => null,  // Hide prev button for single image
-          buttonNext: () => null,  // Hide next button for single image
-        }}
-      />
-    </>
+    <Lightbox
+      open={open}
+      close={close}
+      slides={slides}
+      index={index}
+      render={{ slideHeader: renderSlideHeader }}
+      carousel={{ finite: slides.length <= 1 }}
+      animation={{ fade: 300, swipe: 200 }}
+      controller={{
+        closeOnBackdropClick: true,
+        closeOnPullDown: true
+      }}
+    />
   );
 };
 

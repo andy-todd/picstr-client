@@ -1,0 +1,179 @@
+/* src/styles/PhotoThumbnail.css */
+
+.photo-thumbnail {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: pointer !important;
+  background-color: var(--bg);
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+}
+
+.photo-thumbnail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.photo-thumbnail.selected {
+  box-shadow: 0 0 0 3px var(--brand), 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.photo-thumbnail.selected:hover {
+  transform: translateY(-1px);
+}
+
+.photo-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  image-rendering: -webkit-optimize-contrast;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+.photo-thumbnail img.loaded {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Checkbox styling */
+.photo-checkbox {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.photo-thumbnail.selected .photo-checkbox {
+  opacity: 1;
+}
+
+.photo-thumbnail:hover .photo-checkbox {
+  opacity: 1;
+}
+
+.photo-checkbox .form-check-input {
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.photo-checkbox .form-check-input:checked {
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+
+/* Favorite/Like control */
+.favorite-control, .like-control {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.photo-thumbnail:hover .favorite-control,
+.photo-thumbnail:hover .like-control {
+  opacity: 1;
+}
+
+/* Bottom controls */
+.bottom-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+.photo-thumbnail:hover .bottom-controls {
+  opacity: 1;
+}
+
+/* Icon buttons */
+.icon-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  transition: transform 0.1s ease, color 0.2s ease;
+}
+
+.icon-btn:hover {
+  transform: scale(1.2);
+}
+
+.icon-btn.favorited {
+  color: gold;
+}
+
+.icon-btn.liked {
+  color: pink;
+}
+
+/* Loading placeholder */
+.image-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--accent);
+  z-index: 1;
+}
+
+/* Clickable overlay */
+.click-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Adjust for smaller thumbnails */
+@media (max-width: 768px) {
+  .photo-checkbox, .favorite-control, .like-control {
+    top: 4px;
+  }
+
+  .photo-checkbox {
+    left: 4px;
+  }
+
+  .favorite-control, .like-control {
+    right: 4px;
+  }
+
+  .bottom-controls {
+    height: 32px;
+  }
+}

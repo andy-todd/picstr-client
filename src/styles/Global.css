@@ -1,8 +1,61 @@
-/* Disable Edge image toolbar */
-img {
-  -ms-user-select: none;
-  -webkit-user-drag: none;
-  user-select: none;
-  pointer-events: auto;
-  -webkit-touch-callout: none;
+/* src/styles/Global.css */
+/* Import themes first to ensure variable definitions */
+@import './Themes.css';
+
+/* Import component-specific styles */
+@import './GalleryPage.css';
+@import './PhotoThumbnail.css';
+@import './GalleryPhotoAlbum.css';
+@import './InteractionBar.css';
+@import './CustomLightbox.css';
+@import './HeartBurstAnimation.css';
+@import './Navbar.css';
+
+/* Global styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Override some Bootstrap defaults with theme variables */
+.card {
+  background-color: var(--bg);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.modal-content {
+  background-color: var(--bg);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.form-control {
+  background-color: var(--bg);
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.form-control:focus {
+  background-color: var(--bg);
+  color: var(--text);
 }

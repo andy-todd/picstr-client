@@ -1,10 +1,20 @@
 // src/pages/tabs/SharedCollectionsTab.jsx
 import React from 'react';
-import GalleryGrid from '../../components/GalleryGrid.jsx';
+import { Card } from 'react-bootstrap';
 
-const SharedCollectionsTab = () => {
-  // TODO: fetch shared collections later
-  return <GalleryGrid items={[]} type="collection" />;
+const SharedCollectionsTab = ({ thumbnailSize }) => {
+  return (
+    <div className="p-4">
+      <Card className="text-center p-5">
+        <Card.Body>
+          <Card.Title>Shared Collections</Card.Title>
+          <Card.Text>
+            This feature is coming soon. You'll be able to view collections that others have shared with you.
+          </Card.Text>
+        </Card.Body>
+      </Card>
+    </div>
+  );
 };
 
 export default SharedCollectionsTab;

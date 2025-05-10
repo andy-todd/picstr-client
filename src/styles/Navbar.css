@@ -1,0 +1,66 @@
+/* src/styles/Navbar.css */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light theme */
+.navbar.bg-light {
+  background-color: var(--bg) !important;
+  border-bottom: 1px solid var(--accent);
+}
+
+.navbar.bg-light .nav-link {
+  color: var(--text);
+}
+
+.navbar.bg-light .nav-link:hover,
+.navbar.bg-light .navbar-brand:hover {
+  color: var(--brand);
+}
+
+/* Dark theme */
+.navbar.bg-dark {
+  background-color: var(--bg) !important;
+  border-bottom: 1px solid var(--accent);
+}
+
+.navbar.bg-light .navbar-brand,
+.navbar.bg-dark .navbar-brand{
+  color: var(--brand);
+  font-size: 2em;
+  font-weight: 600;
+}
+.navbar.bg-dark .nav-link {
+  color: var(--text);
+}
+
+.navbar.bg-dark .nav-link:hover,
+.navbar.bg-dark .navbar-brand:hover {
+  color: var(--brand);
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 50%;
+}
+
+.nav-text {
+  display: flex;
+  align-items: center;
+  color: var(--text);
+}
+
+/* Mobile menu */
+.navbar-toggler {
+  border-color: var(--accent);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28var(--text-rgb), 0.5%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
